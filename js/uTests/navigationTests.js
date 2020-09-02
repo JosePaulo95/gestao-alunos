@@ -1,5 +1,6 @@
 function runNavigationTests(context) {
   console.assert(selecionarAbaDeixaItemAtivo.call(context), "selecionarAbaDeixaItemAtivo");
+  //console.assert(selecionarAbaMudaTituloDoContainer.call(context), "selecionarAbaMudaTituloDoContainer");
 }
 function selecionarAbaDeixaItemAtivo() {
   this.selecionarAba("cursos");
@@ -15,4 +16,19 @@ function selecionarAbaDeixaItemAtivo() {
   }
 
   return true;
+}
+function selecionarAbaMudaTituloDoContainer() {
+  this.selecionarAba("cursos");
+
+  if(this.getTituloAbaAtual() != "Cursos"){
+    return false;
+  }
+
+  this.selecionarAba("alunos");
+
+  if(this.getTituloAbaAtual() != "Alunos"){
+    return false;
+  }
+
+  return true; 
 }

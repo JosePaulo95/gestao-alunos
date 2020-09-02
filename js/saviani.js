@@ -2,37 +2,25 @@ var App = new Vue({
   el: "#app",
   data() {
     return {
-      aba_selecionada: null,
+      aba_id_selecionada: null,
       menus: [
         {
           "label": "Gerência",
           "id": "gerencia",
-          "items": [
-            {
-              "label": "Usuários",
-              "id": "usuarios"
-            },
-            {
-              "label": "Acessos",
-              "id": "acessos"
-            }
-          ]
+          "abas_id": ["usuarios", "acessos"]
         },
         {
           "label": "Acadêmico",
           "id": "academico",
-          "items": [
-            {
-              "label": "Cursos",
-              "id": "cursos"
-            },
-            {
-              "label": "Alunos",
-              "id": "alunos"
-            }
-          ]
+          "abas_id": ["cursos", "alunos"]
         }
       ],
+      abas:{
+        "usuarios": {label: "Usuários"},
+        "acessos": {label: "Acessos"},
+        "cursos": {label: "Cursos"},
+        "alunos": {label: "alunos"}
+      },
       cursos: [
         {
           nome: "Medicina"
@@ -80,6 +68,7 @@ var App = new Vue({
   },
   mounted(){
     this.runTests();
+
   },    
   computed: {
     filteredCards() {
@@ -99,10 +88,13 @@ var App = new Vue({
   
   methods: {
     selecionarAba(aba_id){
-      this.aba_selecionada = aba_id;
+      this.aba_id_selecionada = aba_id;
     },
     ehAbaSelecionada(aba_id){
-      return aba_id == this.aba_selecionada;
+      return aba_id == this.aba_id_selecionada;
+    },
+    getAba(aba_id){
+      return this.abas[aba_id];
     },
     runTests(){
       this.is_testing = true;
