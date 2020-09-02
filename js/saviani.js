@@ -2,6 +2,7 @@ var App = new Vue({
   el: "#app",
   data() {
     return {
+      aba_selecionada: null,
       menus: [
         {
           "label": "Gerência",
@@ -97,11 +98,11 @@ var App = new Vue({
   },
   
   methods: {
-    removeCard (card) {
-      this.cards.splice(this.cards.indexOf(card), 1)
+    selecionarAba(aba_id){
+      this.aba_selecionada = aba_id;
     },
-    clearSearchField () {
-      this.search = ''
+    ehAbaSelecionada(aba_id){
+      return aba_id == this.aba_selecionada;
     },
     runTests(){
       this.is_testing = true;

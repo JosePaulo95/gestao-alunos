@@ -58,7 +58,12 @@
                 </p>
                 <ul class="menu-list">
                   <li v-for="item in menu.items">
-                    <a>{{item.label}}</a>
+                    <a
+                      v-on:click="selecionarAba(item.id)"
+                      :class="ehAbaSelecionada(item.id)?'is-active':''"
+                    >
+                      {{item.label}}
+                    </a>
                   </li>
                 </ul>
               </div>
