@@ -1,6 +1,6 @@
 function runNavigationTests(context) {
   console.assert(selecionarAbaDeixaItemAtivo.call(context), "selecionarAbaDeixaItemAtivo");
-  //console.assert(selecionarAbaMudaTituloDoContainer.call(context), "selecionarAbaMudaTituloDoContainer");
+  console.assert(selecionarAbaMudaTituloDoContainer.call(context), "selecionarAbaMudaTituloDoContainer");
 }
 function selecionarAbaDeixaItemAtivo() {
   this.selecionarAba("cursos");

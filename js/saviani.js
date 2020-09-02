@@ -19,7 +19,7 @@ var App = new Vue({
         "usuarios": {label: "Usuários"},
         "acessos": {label: "Acessos"},
         "cursos": {label: "Cursos"},
-        "alunos": {label: "alunos"}
+        "alunos": {label: "Alunos"}
       },
       cursos: [
         {
@@ -68,7 +68,7 @@ var App = new Vue({
   },
   mounted(){
     this.runTests();
-
+    this.selecionarAba("alunos")
   },    
   computed: {
     filteredCards() {
@@ -95,6 +95,14 @@ var App = new Vue({
     },
     getAba(aba_id){
       return this.abas[aba_id];
+    },
+    getTituloAbaAtual(){
+      let aba_atual = this.getAba(this.aba_id_selecionada); 
+      if(aba_atual){
+        return aba_atual.label;
+      }else{
+        return '';
+      }
     },
     runTests(){
       this.is_testing = true;
