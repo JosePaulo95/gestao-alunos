@@ -2,136 +2,84 @@ var App = new Vue({
   el: "#app",
   data() {
     return {
-      search: "",
-      title: "Game of Thrones",
-      cards: [
+      menus: [
         {
-          name: "Season One",
-          cardColor: "dark",
-          items: [
-            "winter is coming",
-            "the kingsroad",
-            "lord snow",
-            "cripples, bastards and broken things",
-            "the wolf and the lion",
-            "a golden crown",
-            "you win or you die",
-            "the pointy end",
-            "baelor",
-            "fire and blood"
+          "label": "Gerência",
+          "id": "gerencia",
+          "items": [
+            {
+              "label": "Usuários",
+              "id": "usuarios"
+            },
+            {
+              "label": "Acessos",
+              "id": "acessos"
+            }
           ]
         },
         {
-          name: "Season 2",
-          cardColor: "info",
-          items: [
-            "the north remembers",
-            "the night lands",
-            "what is dead may never die",
-            "garden of bones",
-            "the ghost of harrenhal",
-            "the old gods and the new",
-            "a man without honor",
-            "the prince of winterfell",
-            "blackwater",
-            "valar morghulis"
-          ]
-        },
-        {
-          name: "Season 3",
-          cardColor: "primary",
-          items: [
-            "valar dohaeris ",
-            "dark wings, dark words",
-            "walk of punishment",
-            "and now his watch is ended",
-            "kissed by fire",
-            "the climb",
-            "the bear and the maiden fair",
-            "second sons",
-            "the rains of castamere",
-            "mhysa"
-          ]
-        },
-        {
-          name: "Season 4",
-          cardColor: "info",
-          items: [
-            "two swords",
-            "the lion and the rose",
-            "breaker of chains",
-            "oathkeeper",
-            "first of his name",
-            "the laws of gods and men",
-            "mockingbird",
-            "the mountain and the viper",
-            "the watchers on the wall",
-            "the children"
-          ]
-        },
-        {
-          name: "Season 5",
-          cardColor: "success",
-          items: [
-            "the wars to come",
-            "the house of black and white",
-            "high sparrow",
-            "sons of the harpy",
-            "kill the boy",
-            "unbowed unbent unbroken",
-            "the gift",
-            "hardome",
-            "the dance of dragons",
-            "mother's mercy"
-          ]
-        },
-        {
-          name: "Season 6",
-          cardColor: "warning",
-          items: [
-            "the red woman",
-            "home",
-            "oathbreaker",
-            "book of the stranger ",
-            "the door",
-            "blood of my blood",
-            "the broken man",
-            "no one",
-            "battle of the bastards",
-            "the winds of winter"
-          ]
-        },
-        {
-          name: "Season 7",
-          cardColor: "danger",
-          items: [
-            "dragonstone",
-            "stormborn",
-            "the queen's justice",
-            "the spoils of war",
-            "eastwatch",
-            "beyond the wall",
-            "the dragon and the wolf"
-          ]
-        },
-        
-             {
-          name: "Season 8",
-          cardColor: "info",
-          items: [
-            "winterfell",
-            "a knight of the seven kingdoms",
-            "the long night",
-            "the last of the starks",
-            "the bells",
-            "the iron throne"
+          "label": "Acadêmico",
+          "id": "academico",
+          "items": [
+            {
+              "label": "Cursos",
+              "id": "cursos"
+            },
+            {
+              "label": "Alunos",
+              "id": "alunos"
+            }
           ]
         }
-      ]     
+      ],
+      cursos: [
+        {
+          nome: "Medicina"
+        },
+        {
+          nome: "Computação"
+        },
+        {
+          nome: "Farmácia"
+        }
+      ],
+      data: [
+          { 'id': 1, 'first_name': 'Jesse', 'last_name': 'Simmons', 'date': '2016-10-15 13:43:27', 'gender': 'Male' },
+          { 'id': 2, 'first_name': 'John', 'last_name': 'Jacobs', 'date': '2016-12-15 06:00:53', 'gender': 'Male' },
+          { 'id': 3, 'first_name': 'Tina', 'last_name': 'Gilbert', 'date': '2016-04-26 06:26:28', 'gender': 'Female' },
+          { 'id': 4, 'first_name': 'Clarence', 'last_name': 'Flores', 'date': '2016-04-10 10:28:46', 'gender': 'Male' },
+          { 'id': 5, 'first_name': 'Anne', 'last_name': 'Lee', 'date': '2016-12-06 14:38:38', 'gender': 'Female' }
+      ],
+      columns: [
+          {
+              field: 'id',
+              label: 'ID',
+              width: '40',
+              numeric: true
+          },
+          {
+              field: 'first_name',
+              label: 'First Name',
+          },
+          {
+              field: 'last_name',
+              label: 'Last Name',
+          },
+          {
+              field: 'date',
+              label: 'Date',
+              centered: true
+          },
+          {
+              field: 'gender',
+              label: 'Gender',
+          }
+      ]
     }
-    },
-    
-      
+  },
+  mounted(){
+    this.runTests();
+  },    
   computed: {
     filteredCards() {
       var _this = this
@@ -154,6 +102,11 @@ var App = new Vue({
     },
     clearSearchField () {
       this.search = ''
+    },
+    runTests(){
+      this.is_testing = true;
+      runNavigationTests(this);
+      this.is_testing = false;
     }
   }
 });
