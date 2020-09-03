@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin - Free Bulma template</title>
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
     <!-- Bulma Version 0.9.0-->
@@ -90,36 +91,60 @@
             <br>
             <div class="columns">
               <div class="column is-12">
+                <nav class="level">
+                  <!-- Left side -->
+                  <div class="level-left">
+                    <div class="level-item">
+                      <a class="button is-small">
+                        <span class="icon">
+                          <i class="fa fa-download"></i>
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Right side -->
+                  <div class="level-right">
+                    <p class="level-item"><a class="button is-success">New</a></p>
+                  </div>
+                </nav>
+
                 <b-table :data="getDadosAbaAtual()">
-                  <b-table-column
-                    v-for="coluna in getColunasAbaAtual()"
-                    :field="coluna.field"
-                    :label="coluna.label"
-                    width="40"
-                    numeric
-                    v-slot="props"
-                  >
-                    {{ props.row[coluna.field]}}
-                  </b-table-column>
+
+                  <template v-for="column in getColunasAbaAtual()">
+                    <b-table-column v-bind="column">
+                        <template
+                            v-if="column.searchable && !column.numeric"
+                            slot="searchable"
+                            slot-scope="props">
+                            <b-input
+                                v-model="props.filters[props.column.field]"
+                                placeholder="Buscar..."
+                                icon="magnify"
+                                size="is-small" />
+                        </template>
+                        <template v-slot="props">
+                            {{ props.row[column.field] }}
+                        </template>
+                    </b-table-column>
+                  </template>
 
                   <b-table-column
-                    field="coluna.field"
-                    label="actions"
+                    label="Ações"
                     width="40"
-                    numeric
                     v-slot="props"
                   >
                     <div class="buttons is-right">
-                      <a class="button is-small is-primary">
-                        <span class="icon is-small">
-                          <i class="mdi mdi-account-edit"></i>
+                      <a class="button is-small is-success">
+                        <span class="icon">
+                          <i class="fa fa-pencil"></i>
                         </span>
                       </a>
-                        <button type="button" class="button is-small is-danger">
-                          <span class="icon is-small">
-                            <i class="mdi mdi-trash-can"></i>
-                          </span>
-                        </button>
+                      <a class="button is-small is-danger">
+                        <span class="icon">
+                          <i class="fa fa-times"></i>
+                        </span>
+                      </a>
                     </div>
                   </b-table-column>
                 </b-table>  
