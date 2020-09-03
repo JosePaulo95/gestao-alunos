@@ -1,6 +1,7 @@
 function runNavigationTests(context) {
   console.assert(selecionarAbaDeixaItemAtivo.call(context), "selecionarAbaDeixaItemAtivo");
-  console.assert(selecionarAbaMudaTituloDoContainer.call(context), "selecionarAbaMudaTituloDoContainer");
+  console.assert(tituloDoContainerEhReativo.call(context), "tituloDoContainerEhReativo");
+  //console.assert(conteudoCursosEAlunosEhReativo.call(context), "conteudoCursosEAlunosEhReativo");
 }
 function selecionarAbaDeixaItemAtivo() {
   this.selecionarAba("cursos");
@@ -17,7 +18,7 @@ function selecionarAbaDeixaItemAtivo() {
 
   return true;
 }
-function selecionarAbaMudaTituloDoContainer() {
+function tituloDoContainerEhReativo() {
   this.selecionarAba("cursos");
 
   if(this.getTituloAbaAtual() != "Cursos"){
@@ -31,4 +32,7 @@ function selecionarAbaMudaTituloDoContainer() {
   }
 
   return true; 
+}
+function conteudoCursosEAlunosEhReativo() {
+  //this.selecionarAba("cursos");
 }
