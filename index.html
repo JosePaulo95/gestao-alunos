@@ -62,7 +62,7 @@
                     <a
                       v-on:click="selecionarAba(aba_id)"
                       :class="ehAbaSelecionada(aba_id)?'is-active':''"
-                    >
+                      >
                       {{getAba(aba_id).label}}
                     </a>
                   </li>
@@ -83,7 +83,7 @@
               <div class="hero-body">
                 <div class="container">
                   <h1 class="title">
-                   {{getTituloAbaAtual()}}
+                  {{getTituloAbaAtual()}}
                   </h1>
                 </div>
               </div>
@@ -91,9 +91,9 @@
             <br>
             <div class="columns">
               <div class="column is-12">
-
                 <!--INICIO ABA LISTAGEM-->
                 <div v-if="getTipoAbaAtual() == 'listagem'">
+                  <!--INICIO MENU SUPERIOR-->
                   <nav class="level">
                     <!-- Left side -->
                     <div class="level-left">
@@ -105,7 +105,6 @@
                         </a>
                       </div>
                     </div>
-
                     <!-- Right side -->
                     <div class="level-right">
                       <p class="level-item">
@@ -113,49 +112,82 @@
                       </p>
                     </div>
                   </nav>
-
+                  <!--FIM MENU SUPERIOR-->
                   <b-table :data="getDadosAbaAtual()">
-
-                    <template v-for="column in getColunasAbaAtual()">
-                      <b-table-column v-bind="column">
-                          <template
-                              v-if="column.searchable && !column.numeric"
-                              slot="searchable"
-                              slot-scope="props">
-                              <b-input
-                                  v-model="props.filters[props.column.field]"
-                                  placeholder="Buscar..."
-                                  icon="magnify"
-                                  size="is-small" />
-                          </template>
-                          <template v-slot="props">
-                              {{ props.row[column.field] }}
-                          </template>
-                      </b-table-column>
-                    </template>
-
-                    <b-table-column
-                      label="Ações"
-                      width="40"
-                      v-slot="props"
-                    >
-                      <div class="buttons is-right">
-                        <a class="button is-small is-success">
-                          <span class="icon">
-                            <i class="fa fa-pencil"></i>
-                          </span>
-                        </a>
-                        <a class="button is-small is-danger">
-                          <span class="icon">
-                            <i class="fa fa-times"></i>
-                          </span>
-                        </a>
-                      </div>
-                    </b-table-column>
-                  </b-table>  
+                  <template v-for="column in getColunasAbaAtual()">
+                  <b-table-column v-bind="column">
+                  <!--FIELD PESQUISA-->
+                  <template
+                  v-if="column.searchable && !column.numeric"
+                  slot="searchable"
+                  slot-scope="props">
+                  <b-input
+                  v-model="props.filters[props.column.field]"
+                  placeholder="Buscar..."
+                  icon="magnify"
+                  size="is-small" />
+                  </template>
+                  <!--VALORES-->
+                  <template v-slot="props">
+                  <div v-if="column.field == 'nome'">
+                    <button class="button" @click="selecionarAba('visualizar-curso', props.row)">
+                    <span>{{ props.row[column.field] }}</span>
+                    </button>
+                  </div>
+                  <div v-else>
+                    {{ props.row[column.field] }}
+                  </div>
+                  </template>
+                  </b-table-column>
+                  </template>
+                  <b-table-column
+                  label="Ações"
+                  width="40"
+                  v-slot="props"
+                  >
+                  <div class="buttons is-right">
+                    <a class="button is-small is-success">
+                      <span class="icon">
+                        <i class="fa fa-pencil"></i>
+                      </span>
+                    </a>
+                    <a class="button is-small is-danger">
+                      <span class="icon">
+                        <i class="fa fa-times"></i>
+                      </span>
+                    </a>
+                  </div>
+                  </b-table-column>
+                  </b-table>
                 </div>
                 <!--FIM ABA LISTAGEM-->
-
+                
+                <!--INICIO ABA PERFIL-->
+                <div v-if="getTipoAbaAtual() == 'perfil'">
+                  <div class="card">
+                    <header class="card-header">
+                      <a class="card-header-title" @click="selecionarAba('cursos')">
+                        <span class="icon">
+                          <i class="fa fa-arrow-left"></i>
+                        </span>
+                        Voltar para Cursos
+                      </a>
+                    </header>
+                    <div class="card-content">
+                      <div class="content">
+                        <div v-for="(row, key) in row_selecionada" class="field">
+                          <label class="label">
+                            {{key}}
+                          </label>
+                          <div class="control is-clearfix">
+                            <input type="text" autocomplete="on" readonly="readonly" class="input is-static" :value="row">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--FIM ABA PERFIL-->
                 <!--INICIO ABA CADASTRO-->
                 <div v-if="getTipoAbaAtual() == 'cadastro'">
                   <div class="card" v-if="aba_id_selecionada == 'cadastrar-cursos'">
@@ -164,7 +196,7 @@
                         <span class="icon">
                           <i class="fa fa-arrow-left"></i>
                         </span>
-                         Voltar para Cursos
+                        Voltar para Cursos
                       </a>
                     </header>
                     <div class="card-content">
@@ -196,14 +228,14 @@
                         </form>
                       </div>
                     </div>
-                  </div> 
+                  </div>
                   <div class="card" v-if="aba_id_selecionada == 'cadastrar-alunos'">
                     <header class="card-header">
                       <a class="card-header-title" @click="selecionarAba('alunos')">
                         <span class="icon">
                           <i class="fa fa-arrow-left"></i>
                         </span>
-                         Voltar para Alunos
+                        Voltar para Alunos
                       </a>
                     </header>
                     <div class="card-content">
@@ -247,10 +279,9 @@
                         </form>
                       </div>
                     </div>
-                  </div> 
+                  </div>
                 </div>
                 <!--FIM ABA CADASTRO-->
-
               </div>
             </div>
           </div>
@@ -260,9 +291,7 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/buefy/dist/buefy.min.js"></script>
     <script src="js/plugins/moment/moment-with-locales.js"></script>
-
     <script src="js/uTests/navigationTests.js"></script>
-
     <script async type="text/javascript" src="js/saviani.js"></script>
   </body>
 </html>

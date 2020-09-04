@@ -2,6 +2,7 @@ var App = new Vue({
   el: "#app",
   data() {
     return {
+      row_selecionada: null,
       aba_id_selecionada: null,
       menus: [
         {
@@ -79,7 +80,8 @@ var App = new Vue({
           ]
         },
         "cadastrar-cursos": {label: "Cadastro de curso", tipo: "cadastro"},
-        "cadastrar-alunos": {label: "Cadastro de aluno", tipo: "cadastro"}
+        "visualizar-curso": {label: "Informações do curso", tipo: "perfil"},
+        "cadastrar-alunos": {label: "Cadastro de aluno", tipo: "cadastro"},
       },
       
     }
@@ -92,9 +94,9 @@ var App = new Vue({
     
   },
   methods: {
-    selecionarAba(aba_id){
-      console.log(aba_id)
+    selecionarAba(aba_id, row=null){
       this.aba_id_selecionada = aba_id;
+      this.row_selecionada = row;
     },
     ehAbaSelecionada(aba_id){
       return aba_id == this.aba_id_selecionada;
