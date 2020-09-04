@@ -136,6 +136,18 @@ var App = new Vue({
         return [];
       }
     },
+    excluir(aba_id, index){
+      this.$buefy.dialog.confirm({
+          title: 'Deletando curso',
+          message: 'Você tem certeza que deseja <b>remover</b> este curso?',
+          confirmText: 'Remover curso',
+          type: 'is-danger',
+          hasIcon: true,
+          onConfirm: () => this.$buefy.toast.open('Curso apagado')
+      })
+      //this.abas[aba_id].dados.splice[index, 1];
+      //console.log(this.abas[aba_id].dados.index)
+    },
     criarCurso(){
       var form = document.getElementById('criar-curso-form');
       var nome_input = document.getElementById('criar-nome-curso');
