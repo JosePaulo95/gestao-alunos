@@ -91,63 +91,115 @@
             <br>
             <div class="columns">
               <div class="column is-12">
-                <nav class="level">
-                  <!-- Left side -->
-                  <div class="level-left">
-                    <div class="level-item">
-                      <a class="button is-small">
-                        <span class="icon">
-                          <i class="fa fa-download"></i>
-                        </span>
-                      </a>
+
+                <!--INICIO ABA LISTAGEM-->
+                <div v-if="getTipoAbaAtual() == 'listagem'">
+                  <nav class="level">
+                    <!-- Left side -->
+                    <div class="level-left">
+                      <div class="level-item">
+                        <a class="button is-small">
+                          <span class="icon">
+                            <i class="fa fa-download"></i>
+                          </span>
+                        </a>
+                      </div>
                     </div>
-                  </div>
 
-                  <!-- Right side -->
-                  <div class="level-right">
-                    <p class="level-item"><a class="button is-success">New</a></p>
-                  </div>
-                </nav>
+                    <!-- Right side -->
+                    <div class="level-right">
+                      <p class="level-item">
+                        <a class="button is-success" v-on:click="selecionarAba('cadastrar-'+aba_id_selecionada)">Cadastrar</a>
+                      </p>
+                    </div>
+                  </nav>
 
-                <b-table :data="getDadosAbaAtual()">
+                  <b-table :data="getDadosAbaAtual()">
 
-                  <template v-for="column in getColunasAbaAtual()">
-                    <b-table-column v-bind="column">
-                        <template
-                            v-if="column.searchable && !column.numeric"
-                            slot="searchable"
-                            slot-scope="props">
-                            <b-input
-                                v-model="props.filters[props.column.field]"
-                                placeholder="Buscar..."
-                                icon="magnify"
-                                size="is-small" />
-                        </template>
-                        <template v-slot="props">
-                            {{ props.row[column.field] }}
-                        </template>
+                    <template v-for="column in getColunasAbaAtual()">
+                      <b-table-column v-bind="column">
+                          <template
+                              v-if="column.searchable && !column.numeric"
+                              slot="searchable"
+                              slot-scope="props">
+                              <b-input
+                                  v-model="props.filters[props.column.field]"
+                                  placeholder="Buscar..."
+                                  icon="magnify"
+                                  size="is-small" />
+                          </template>
+                          <template v-slot="props">
+                              {{ props.row[column.field] }}
+                          </template>
+                      </b-table-column>
+                    </template>
+
+                    <b-table-column
+                      label="Ações"
+                      width="40"
+                      v-slot="props"
+                    >
+                      <div class="buttons is-right">
+                        <a class="button is-small is-success">
+                          <span class="icon">
+                            <i class="fa fa-pencil"></i>
+                          </span>
+                        </a>
+                        <a class="button is-small is-danger">
+                          <span class="icon">
+                            <i class="fa fa-times"></i>
+                          </span>
+                        </a>
+                      </div>
                     </b-table-column>
-                  </template>
+                  </b-table>  
+                </div>
+                <!--FIM ABA LISTAGEM-->
 
-                  <b-table-column
-                    label="Ações"
-                    width="40"
-                    v-slot="props"
-                  >
-                    <div class="buttons is-right">
-                      <a class="button is-small is-success">
-                        <span class="icon">
-                          <i class="fa fa-pencil"></i>
-                        </span>
-                      </a>
-                      <a class="button is-small is-danger">
-                        <span class="icon">
-                          <i class="fa fa-times"></i>
-                        </span>
-                      </a>
+                <!--INICIO ABA CADASTRO-->
+                <div v-if="getTipoAbaAtual() == 'cadastro'">
+                  <div class="card">
+                    <header class="card-header">
+                      <p class="card-header-title">
+                        
+                      </p>
+                    </header>
+                    <div class="card-content">
+                      <div class="content">
+                        <form id="criar-curso-form" onsubmit="return false">
+                          <div class="field">
+                            <label class="label">Nome</label>
+                            <div class="control">
+                              <input id="criar-nome-curso" required class="input" type="text">
+                            </div>
+                          </div>
+                          <div class="field">
+                            <label class="label">Código</label>
+                            <div class="control">
+                              <input id="criar-codigo-curso" required class="input" type="text">
+                            </div>
+                          </div>
+                          <div class="field">
+                            <label class="label">Carga horária</label>
+                            <div class="control">
+                              <input id="criar-carga-curso" required type="number" class="input">
+                            </div>
+                          </div>
+                          <div class="field is-grouped">
+                            <div class="control">
+                              <button @click="criarCurso()" class="button is-success">Criar</button>
+                            </div>
+                            <div class="control">
+                              <button class="button is-light">Cancelar</button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
                     </div>
-                  </b-table-column>
-                </b-table>  
+                  </div> 
+                </div>
+                <!--FIM ABA CADASTRO-->
+
               </div>
             </div>
           </div>
@@ -156,6 +208,7 @@
     </div>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/buefy/dist/buefy.min.js"></script>
+    <script src="js/plugins/moment/moment-with-locales.js"></script>
 
     <script src="js/uTests/navigationTests.js"></script>
 

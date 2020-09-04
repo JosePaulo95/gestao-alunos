@@ -1,6 +1,8 @@
 function runNavigationTests(context) {
   console.assert(selecionarAbaDeixaItemAtivo.call(context), "selecionarAbaDeixaItemAtivo");
   console.assert(tituloDoContainerEhReativo.call(context), "tituloDoContainerEhReativo");
+  console.assert(selecionarCadastrarAlteraAbaParaCadastro.call(context), "selecionarCadastrarAlteraAbaParaCadastro");
+  //console.assert(criarCursoCriaUmCurso.call(context), "criarCursoCriaUmCurso");
   //console.assert(conteudoCursosEAlunosEhReativo.call(context), "conteudoCursosEAlunosEhReativo");
 }
 function selecionarAbaDeixaItemAtivo() {
@@ -35,4 +37,14 @@ function tituloDoContainerEhReativo() {
 }
 function conteudoCursosEAlunosEhReativo() {
   //this.selecionarAba("cursos");
+}
+
+function selecionarCadastrarAlteraAbaParaCadastro() {
+  this.selecionarAba("cadastrar-cursos");
+  
+  if(this.getTituloAbaAtual() != "Cadastro de curso"){
+    return false;
+  }
+
+  return true;
 }

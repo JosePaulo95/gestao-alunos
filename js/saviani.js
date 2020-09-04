@@ -20,10 +20,11 @@ var App = new Vue({
         "acessos": {label: "Acessos"},
         "cursos": {
           label: "Cursos",
+          tipo: "listagem",
           dados: [
-            { 'codigo': 1, 'nome': 'Medicina', 'date': '2016-10-15 13:43:27', 'carga_horaria': 360 },
-            { 'codigo': 2, 'nome': 'Farmácia', 'date': '2016-12-15 06:00:53', 'carga_horaria': 40 },
-            { 'codigo': 3, 'nome': 'Direito', 'date': '2016-04-26 06:26:28', 'carga_horaria': 700 },
+            { 'codigo': 1, 'nome': 'Medicina', 'created_at': '2016-10-15 13:43:27', 'carga_horaria': 360 },
+            { 'codigo': 2, 'nome': 'Farmácia', 'created_at': '2016-12-15 06:00:53', 'carga_horaria': 40 },
+            { 'codigo': 3, 'nome': 'Direito', 'created_at': '2016-04-26 06:26:28', 'carga_horaria': 700 },
           ],
           colunas: [
             {
@@ -43,7 +44,7 @@ var App = new Vue({
               numeric: true
             },
             {
-              field: 'date',
+              field: 'created_at',
               label: 'Data de cadastro',
               centered: true
             }
@@ -51,6 +52,7 @@ var App = new Vue({
         },
         "alunos": {
           label: "Alunos",
+          tipo: "listagem",
           dados: [
             { 'id': 1, 'nome': 'Jesse', 'cpf': '008.192.019-12', 'endereco': 'rua 12 Vinhais casa 34 São Luís-MA', 'cep': '65000-000', 'email': 'Jesse@gmail.com', 'telefone': '9189-1920'},
             { 'id': 2, 'nome': 'John', 'cpf': '008.192.019-12', 'endereco': 'rua 12 Vinhais casa 34 São Luís-MA', 'cep': '65000-000', 'email': 'John@gmail.com', 'telefone': '9189-1920'},
@@ -75,7 +77,8 @@ var App = new Vue({
               label: 'Telefone',
             }
           ]
-        }
+        },
+        "cadastrar-cursos": {label: "Cadastro de curso", tipo: "cadastro"}
       },
       
     }
@@ -102,6 +105,7 @@ var App = new Vue({
   
   methods: {
     selecionarAba(aba_id){
+      console.log(aba_id)
       this.aba_id_selecionada = aba_id;
     },
     ehAbaSelecionada(aba_id){
@@ -129,10 +133,63 @@ var App = new Vue({
     getColunasAbaAtual(){
       let aba_atual = this.getAba(this.aba_id_selecionada); 
       if(aba_atual){
-        console.log(aba_atual.colunas)
         return aba_atual.colunas;
       }else{
         return [];
+      }
+    },
+    getTipoAbaAtual(){
+      let aba_atual = this.getAba(this.aba_id_selecionada); 
+      if(aba_atual){
+        return aba_atual.tipo;
+      }else{
+        return [];
+      }
+    },
+    criarCurso(){
+      var form = document.getElementById('criar-curso-form');
+      var nome_input = document.getElementById('criar-nome-curso');
+      var codigo_input = document.getElementById('criar-codigo-curso');
+
+      var nomes_repetidos = this.abas["cursos"].dados.filter(function (curso) {
+        return curso.nome === nome_input.value
+      })
+      var codigos_repetidos = this.abas["cursos"].dados.filter(function (curso) {
+        return curso.codigo === codigo_input.value
+      })
+
+      if (nomes_repetidos.length>0) {
+        nome_input.setCustomValidity("Já existe um curso com o nome "+nome_input.value);
+      }else{
+        nome_input.setCustomValidity("");//tem q resetar
+      }
+      if (codigos_repetidos.length>0) {
+        codigo_input.setCustomValidity("Já existe um curso com este código.");
+      }else{
+        codigo_input.setCustomValidity("");//tem q resetar
+      }      
+      if(form.checkValidity()){
+        const codigo =        document.getElementById('criar-codigo-curso').value;
+        const nome =          document.getElementById('criar-nome-curso').value;
+        const carga_horaria = document.getElementById('criar-carga-curso').value;
+        const dt_criacao =    moment().locale("pt-BR").format("L LT");
+        
+        let novo_curso = {
+          codigo: codigo,
+          nome: nome,
+          carga_horaria: carga_horaria,
+          created_at: dt_criacao
+        };
+        this.abas["cursos"].dados.push(novo_curso)
+        this.$buefy.dialog.confirm({
+          title: 'Curso cadastrado!',
+          message: 'O curso '+nome+' ('+carga_horaria+'h) foi criado com sucesso. O que você deseja fazer?',
+          cancelText: 'Cadastrar outro curso',
+          confirmText: 'Ir para lista de cursos',
+          type: 'is-success',
+          onConfirm: () => this.selecionarAba("cursos"),
+          onCancel: () => this.$buefy.toast.open('User disagreed')
+        })
       }
     },
     runTests(){
