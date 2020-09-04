@@ -158,11 +158,14 @@
 
                 <!--INICIO ABA CADASTRO-->
                 <div v-if="getTipoAbaAtual() == 'cadastro'">
-                  <div class="card">
+                  <div class="card" v-if="aba_id_selecionada == 'cadastrar-cursos'">
                     <header class="card-header">
-                      <p class="card-header-title">
-                        
-                      </p>
+                      <a class="card-header-title" @click="selecionarAba('cursos')">
+                        <span class="icon">
+                          <i class="fa fa-arrow-left"></i>
+                        </span>
+                         Voltar para Cursos
+                      </a>
                     </header>
                     <div class="card-content">
                       <div class="content">
@@ -189,8 +192,56 @@
                             <div class="control">
                               <button @click="criarCurso()" class="button is-success">Criar</button>
                             </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div> 
+                  <div class="card" v-if="aba_id_selecionada == 'cadastrar-alunos'">
+                    <header class="card-header">
+                      <a class="card-header-title" @click="selecionarAba('alunos')">
+                        <span class="icon">
+                          <i class="fa fa-arrow-left"></i>
+                        </span>
+                         Voltar para Alunos
+                      </a>
+                    </header>
+                    <div class="card-content">
+                      <div class="content">
+                        <form id="criar-aluno-form" onsubmit="return false">
+                          <div class="field">
+                            <label class="label">Nome</label>
                             <div class="control">
-                              <button class="button is-light">Cancelar</button>
+                              <input id="criar-nome-aluno" required class="input" type="text">
+                            </div>
+                          </div>
+                          <div class="field">
+                            <label class="label">Código</label>
+                            <div class="control">
+                              <input id="criar-id-aluno" required class="input" type="text">
+                            </div>
+                          </div>
+                          <div class="field">
+                            <label class="label">CPF</label>
+                            <div class="control">
+                              <input id="criar-cpf-aluno" required class="input" type="text">
+                            </div>
+                          </div>
+                          <div class="field">
+                            <label class="label">Email</label>
+                            <div class="control">
+                              <input id="criar-email-aluno" required class="input" type="text">
+                            </div>
+                          </div>
+                          <div class="field">
+                            <label class="label">Telefone</label>
+                            <div class="control">
+                              <input id="criar-telefone-aluno" required type="number" class="input">
+                            </div>
+                          </div>
+                          <div class="field is-grouped">
+                            <div class="control">
+                              <button @click="criarAluno()" class="button is-success">Criar</button>
                             </div>
                           </div>
                         </form>

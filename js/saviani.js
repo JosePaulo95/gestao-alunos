@@ -78,7 +78,8 @@ var App = new Vue({
             }
           ]
         },
-        "cadastrar-cursos": {label: "Cadastro de curso", tipo: "cadastro"}
+        "cadastrar-cursos": {label: "Cadastro de curso", tipo: "cadastro"},
+        "cadastrar-alunos": {label: "Cadastro de aluno", tipo: "cadastro"}
       },
       
     }
@@ -88,21 +89,8 @@ var App = new Vue({
     this.selecionarAba("cursos")
   },    
   computed: {
-    filteredCards() {
-      var _this = this
-      if(this.search.length === 0) return this.cards
-      return this.cards.map(function(card) {
-        return {
-          name: card.name,
-          cardColor: card.cardColor,
-          items: card.items.filter(function (item) {
-            return item.includes(_this.search)
-          })
-        }
-      })
-    }
+    
   },
-  
   methods: {
     selecionarAba(aba_id){
       console.log(aba_id)
