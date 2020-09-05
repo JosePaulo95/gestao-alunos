@@ -21,3 +21,5 @@ Route.get('/api/hello', 'TestController.hello')
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
+
+Route.resource("cursos", "CursoController")
