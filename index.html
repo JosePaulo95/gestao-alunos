@@ -113,7 +113,7 @@
                     </div>
                   </nav>
                   <!--FIM MENU SUPERIOR-->
-                  <b-table :data="getDadosAbaAtual()">
+                  <b-table :data="getDadosAbaAtual()" :paginated="true" per-page="6">
                     <template v-for="column in getColunasAbaAtual()">
                       <b-table-column v-bind="column">
                       <!--FIELD PESQUISA-->
@@ -153,7 +153,7 @@
                             <i class="fa fa-pencil"></i>
                           </span>
                         </a>
-                        <a class="button is-small is-danger" @click="excluir(aba_id_selecionada, props.id)">
+                        <a class="button is-small is-danger" @click="excluir('cursos', props.row.id)">
                           <span class="icon">
                             <i class="fa fa-times"></i>
                           </span>
@@ -291,6 +291,7 @@
       </div>
     </div>
     <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
     <script src="https://unpkg.com/buefy/dist/buefy.min.js"></script>
     <script src="js/plugins/moment/moment-with-locales.js"></script>
     <script src="js/uTests/navigationTests.js"></script>

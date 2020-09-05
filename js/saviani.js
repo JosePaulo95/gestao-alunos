@@ -97,6 +97,15 @@ var App = new Vue({
     selecionarAba(aba_id, row=null){
       this.aba_id_selecionada = aba_id;
       this.row_selecionada = row;
+
+      this.loadContent(aba_id);
+    },
+    loadContent(aba_id){
+      if(!this.is_testing){
+        axios
+        .get('https://5f52be047c47c30016e30a17.mockapi.io/'+aba_id)
+        .then(response => (this.abas[aba_id].dados = response.data))
+      }
     },
     ehAbaSelecionada(aba_id){
       return aba_id == this.aba_id_selecionada;
@@ -136,14 +145,19 @@ var App = new Vue({
         return [];
       }
     },
-    excluir(aba_id, index){
+    excluir(entidade, id){
+      console.log('https://5f52be047c47c30016e30a17.mockapi.io/'+entidade+"/"+id)
       this.$buefy.dialog.confirm({
           title: 'Deletando curso',
           message: 'Você tem certeza que deseja <b>remover</b> este curso?',
           confirmText: 'Remover curso',
           type: 'is-danger',
           hasIcon: true,
-          onConfirm: () => this.$buefy.toast.open('Curso apagado')
+          onConfirm: () => {
+             axios
+             .delete('https://5f52be047c47c30016e30a17.mockapi.io/'+entidade+"/"+id)
+             .then(this.$buefy.toast.open('Curso apagado'));
+          }
       })
       //this.abas[aba_id].dados.splice[index, 1];
       //console.log(this.abas[aba_id].dados.index)
@@ -182,16 +196,23 @@ var App = new Vue({
           carga_horaria: carga_horaria,
           created_at: dt_criacao
         };
-        this.abas["cursos"].dados.push(novo_curso)
-        this.$buefy.dialog.confirm({
-          title: 'Curso cadastrado!',
-          message: 'O curso '+nome+' ('+carga_horaria+'h) foi criado com sucesso. O que você deseja fazer?',
-          cancelText: 'Cadastrar outro curso',
-          confirmText: 'Ir para lista de cursos',
-          type: 'is-success',
-          onConfirm: () => this.selecionarAba("cursos"),
-          onCancel: () => this.$buefy.toast.open('User disagreed')
+        //this.abas["cursos"].dados.push(novo_curso)
+        axios.post('https://5f52be047c47c30016e30a17.mockapi.io/cursos', novo_curso)
+        .then(response => {
+          this.$buefy.dialog.confirm({
+            title: 'Curso cadastrado!',
+            message: 'O curso '+nome+' ('+carga_horaria+'h) foi criado com sucesso. O que você deseja fazer?',
+            cancelText: 'Cadastrar outro curso',
+            confirmText: 'Ir para lista de cursos',
+            type: 'is-success',
+            onConfirm: () => this.selecionarAba("cursos"),
+            onCancel: () => this.$buefy.toast.open('User disagreed')
+          })
         })
+        .catch(e => {
+          this.errors.push(e)
+        })
+        
       }
     },
     runTests(){
