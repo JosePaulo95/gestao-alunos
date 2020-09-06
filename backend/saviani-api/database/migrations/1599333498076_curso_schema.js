@@ -9,7 +9,7 @@ class CursoSchema extends Schema {
     	table.increments()
 		table.string("codigo", 30).notNullable()
 		table.string("nome", 240).notNullable()
-		table.integer("carga_horaria", 240).notNullable()
+		table.integer("carga_horaria").notNullable()
     	table.timestamps()
     })
   }

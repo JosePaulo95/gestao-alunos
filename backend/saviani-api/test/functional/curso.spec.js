@@ -2,17 +2,16 @@
 const { test, trait } = use('Test/Suite')('Curso')
 const Curso = use('App/Models/Curso')
 
-const assert = require('assert')
-
 trait('Test/ApiClient')
 
 /*
 lista cursos
 apaga curso
 edita curso
-não é possível criar um curso faltando algum parâmetro
-não aceita carga horaria não positiva
-não aceita duplicatas
+informa erro RequiredField
+informa erro carga horária OutOfRange
+informa erro duplicata
+informa erro Maxlength
 */
 
 
@@ -89,79 +88,151 @@ test('edita curso', async ({ client }) => {
 	})
 })
 
-test('não é possível criar um curso faltando algum parâmetro', async ({ client }) => {
-	const response1 = await client.post('/cursos').send({
+test('informa erro RequiredField', async ({ client, assert }) => {
+	const responseSemNome = await client.post('/cursos').send({
 	  	//nome: 'Curso 1',
 	    carga_horaria: 200,
 	    codigo: "120"
 	}).end();
-
-	assert.notStrictEqual(response1.status, 200);
-	assert.notStrictEqual(response1.status, 201);
-
-	const response2 = await client.post('/cursos').send({
+	const responseSemCargaHr = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
 	    //carga_horaria: 200,
 	    codigo: "120"
 	}).end();
-
-	assert.notStrictEqual(response2.status, 200);
-	assert.notStrictEqual(response2.status, 201);
-
-	const response3 = await client.post('/cursos').send({
+	const responseSemCodigo = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
 	    carga_horaria: 200
 	    //codigo: "120"
 	}).end();
 
-	assert.notStrictEqual(response3.status, 200);
-	assert.notStrictEqual(response3.status, 201);
+	responseSemNome.assertStatus(403);
+	responseSemCargaHr.assertStatus(403);
+	responseSemCodigo.assertStatus(403);
+
+	responseSemNome.assertError([{
+		message: 'Nome para o curso não informado.',
+		field: 'nome',
+		validation: 'RequiredField'
+	}])
+	responseSemCargaHr.assertError([{
+		message: 'Carga horária do curso não informada.',
+		field: 'carga_horaria',
+		validation: 'RequiredField'
+	}
+	)	
+	responseSemCodigo.assertError([{
+		message: 'Código para o curso não informado.',
+		field: 'codigo',
+		validation: 'RequiredField'
+	}
+	)	
 })
 
-test('não aceita carga horaria não positiva', async ({ client }) => {
+test('informa erro carga horária OutOfRange', async ({ client }) => {
 	const responseValorNegativo = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
 	    carga_horaria: -200,
 	    codigo: "120"
 	}).end();
-
-	responseValorNegativo.assertStatus(403);
-
 	const responseValorZero = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
 	    carga_horaria: 0,
 	    codigo: "120"
 	}).end();
 
-	responseValorZero.assertStatus(403);
-
-	const valid = await Curso.create({
-	    nome: 'Curso 1',
-	    codigo: "1",
-	    carga_horaria: 200
-	})	
-	const responseEditaParaNegativo = await client.patch('/cursos').send({
+	const curso_valido = await Curso.create({nome: 'Curso 1', codigo: "1", carga_horaria: 200})
+	const responseEditaParaNegativo = await client.patch('/cursos/'+curso_valido.id).send({
 	    carga_horaria: -200
 	}).end();
 
+	responseValorNegativo.assertStatus(403);
 	responseValorZero.assertStatus(403);
+	responseEditaParaNegativo.assertStatus(403);	
+
+	responseValorNegativo.assertError([{
+	    message: 'Um curso não pode conter uma carga horária negativa.',
+	    field: 'carga_horaria',
+	    validation: 'OutOfRange'
+	}])
+	responseValorZero.assertError([{
+	    message: 'Um curso não pode conter 0 horas.',
+	    field: 'carga_horaria',
+	    validation: 'OutOfRange'
+	}])
+	responseEditaParaNegativo.assertError([{
+	    message: 'Um curso não pode conter uma carga horária negativa.',
+	    field: 'carga_horaria',
+	    validation: 'OutOfRange'
+	}])
 })
 
-test('não aceita duplicatas', async ({ client }) => {
-	const c = await Curso.create({
-	    nome: 'Curso 1',
-	    codigo: "1",
-	    carga_horaria: 200
-	})
-	const responseCriaDuplicata = await client.post('/cursos').send({
+test('informa erro duplicata', async ({ client }) => {
+	const c1 = await Curso.create({nome: 'Curso 1',codigo: "1",carga_horaria: 200})
+	const c2 = await Curso.create({nome: 'Curso 2',codigo: "2",carga_horaria: 200})
+
+	const responseCriarDuplicataNome = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
-	  	codigo: "1"
+	  	codigo: "3",
+	  	carga_horaria: 200
 	}).end();
-	const responseEditaDuplicando = await client.patch('/cursos').send({
-	  	nome: 'Curso 1',
-	  	codigo: "1"
+	const responseCriarDuplicataCodigo = await client.post('/cursos').send({
+	  	nome: 'Curso 3',
+	  	codigo: "1",
+	  	carga_horaria: 200
+	}).end();
+	const responseEditaNomeDuplicando = await client.patch('/cursos/'+c1.id).send({
+	  	nome: 'Curso 2'
 	}).end();
 
-	responseCriaDuplicata.assertStatus(409);
-	responseEditaDuplicando.assertStatus(409);
+	responseCriarDuplicataNome.assertStatus(409);
+	responseCriarDuplicataCodigo.assertStatus(409);
+	responseEditaNomeDuplicando.assertStatus(409);
+
+	responseCriarDuplicataNome.assertError([{
+	    message: 'Já existe um curso com este nome.',
+	    field: 'nome',
+	    validation: 'AlreadyExists'
+	}])
+	responseCriarDuplicataCodigo.assertError([{
+	    message: 'O nome informado é longo demais.',
+	    field: 'codigo',
+	    validation: 'AlreadyExists'
+	}])
+	responseEditaNomeDuplicando.assertError([{
+	    message: 'Já existe um curso com este nome.',
+	    field: 'nome',
+	    validation: 'AlreadyExists'
+	}])
+})
+test('informa erro Maxlength', async ({ client }) => {
+	const responseNomeCodTamMax = await client.post('/cursos').send({
+	  	nome: 'a'.repeat(240),
+	  	codigo: "1".repeat(30),
+	  	carga_horaria: 200
+	}).end();
+	const responseNomeMtLongo = await client.post('/cursos').send({
+	  	nome: 'a'.repeat(241),
+	  	codigo: "1",
+	  	carga_horaria: 200
+	}).end();
+	const responseCodMtLongo = await client.post('/cursos').send({
+	  	nome: 'a',
+	  	codigo: "1".repeat(31),
+	  	carga_horaria: 200
+	}).end();
+
+	responseNomeCodTamMax.assertStatus(200);
+	responseNomeMtLongo.assertStatus(403);
+	responseCodMtLongo.assertStatus(403);
+
+	responseNomeMtLongo.assertError([{
+	    message: 'O nome informado é longo demais.',
+	    field: 'nome',
+	    validation: 'InvalidMaxLength'
+	}])
+	responseCodMtLongo.assertError([{
+	    message: 'O código informado é longo demais.',
+	    field: 'codigo',
+	    validation: 'InvalidMaxLength'
+	}])
 })
