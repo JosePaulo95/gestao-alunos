@@ -12,45 +12,32 @@ informa erro RequiredField
 informa erro carga horária OutOfRange
 informa erro duplicata
 informa erro Maxlength
+informa erro 
 */
 
-
+const curso1 = {
+    nome: 'Curso 1',
+    codigo: "1",
+    carga_horaria: 200
+};
+const curso2 = {
+    nome: 'Curso 2',
+    codigo: "2",
+    carga_horaria: 200
+};
 test('lista cursos', async ({ client }) => {
-	await Curso.create({
-	    nome: 'Curso 1',
-	    codigo: "1",
-	    carga_horaria: 200
-	})
-	await Curso.create({
-	    nome: 'Curso 2',
-	    codigo: "2",
-	    carga_horaria: 200
-  	})
+	await Curso.create(curso1)
+	await Curso.create(curso2)
+
 	const response = await client.get('/cursos').end()
 
 	response.assertStatus(200)
-	response.assertJSONSubset([{
-		nome: 'Curso 1',
-		codigo: "1",
-		carga_horaria: 200
-	},{
-	    nome: 'Curso 2',
-	    codigo: "2",
-	    carga_horaria: 200
-	}])
+	response.assertJSONSubset([curso1, curso2])
 })
 
 test('apaga curso', async ({ client }) => {
-	await Curso.create({
-	    nome: 'Curso 1',
-	    codigo: "1",
-	    carga_horaria: 200
-	})
-	let c = await Curso.create({
-	    nome: 'Curso 2',
-	    codigo: "2",
-	    carga_horaria: 200
-  	})
+	await Curso.create(curso1)
+	let c = await Curso.create(curso2)
 
 	const response1 = await client.delete('/cursos/'+c.id).end()	
 	response1.assertStatus(200)
@@ -61,19 +48,11 @@ test('apaga curso', async ({ client }) => {
 	//não apaga o outro curso
 	const response3 = await client.get('/cursos').end()
 	response3.assertStatus(200)
-	response3.assertJSONSubset([{
-		nome: 'Curso 1',
-		codigo: "1",
-		carga_horaria: 200
-	}])
+	response3.assertJSONSubset([curso1])
 })
 
 test('edita curso', async ({ client }) => {
-	let c = await Curso.create({
-	    nome: 'Curso 1',
-	    codigo: "1",
-	    carga_horaria: 200
-	})
+	let c = await Curso.create(curso1)
 
 	const response1 = await client.patch('/cursos/'+c.id).send({
 	    carga_horaria: 300
@@ -104,10 +83,22 @@ test('informa erro RequiredField', async ({ client, assert }) => {
 	    carga_horaria: 200
 	    //codigo: "120"
 	}).end();
+	const responseNomeVazio = await client.post('/cursos').send({
+	  	nome: '',
+	    carga_horaria: 200
+	    codigo: "120"
+	}).end();
+	const responseCodigoEspacosBrancos = await client.post('/cursos').send({
+	  	nome: 'Curso 1',
+	    carga_horaria: 200
+	    codigo: "        "
+	}).end();
 
 	responseSemNome.assertStatus(403);
 	responseSemCargaHr.assertStatus(403);
 	responseSemCodigo.assertStatus(403);
+	responseNomeVazio.assertStatus(403);
+	responseCodigoEspacosBrancos.assertStatus(403);
 
 	responseSemNome.assertError([{
 		message: 'Nome para o curso não informado.',
@@ -118,14 +109,22 @@ test('informa erro RequiredField', async ({ client, assert }) => {
 		message: 'Carga horária do curso não informada.',
 		field: 'carga_horaria',
 		validation: 'RequiredField'
-	}
-	)	
+	})	
 	responseSemCodigo.assertError([{
 		message: 'Código para o curso não informado.',
 		field: 'codigo',
 		validation: 'RequiredField'
-	}
-	)	
+	})
+	responseNomeVazio.assertError([{
+		message: 'Por favor, infome um nome para o curso.',
+		field: 'nome',
+		validation: 'RequiredField'
+	})
+	responseCodigoEspacosBrancos.assertError([{
+		message: 'Por favor, infome o código do curso.',
+		field: 'codigo',
+		validation: 'RequiredField'
+	})
 })
 
 test('informa erro carga horária OutOfRange', async ({ client }) => {
@@ -140,7 +139,7 @@ test('informa erro carga horária OutOfRange', async ({ client }) => {
 	    codigo: "120"
 	}).end();
 
-	const curso_valido = await Curso.create({nome: 'Curso 1', codigo: "1", carga_horaria: 200})
+	const curso_valido = await Curso.create(curso1)
 	const responseEditaParaNegativo = await client.patch('/cursos/'+curso_valido.id).send({
 	    carga_horaria: -200
 	}).end();
@@ -167,8 +166,8 @@ test('informa erro carga horária OutOfRange', async ({ client }) => {
 })
 
 test('informa erro duplicata', async ({ client }) => {
-	const c1 = await Curso.create({nome: 'Curso 1',codigo: "1",carga_horaria: 200})
-	const c2 = await Curso.create({nome: 'Curso 2',codigo: "2",carga_horaria: 200})
+	const c1 = await Curso.create(curso1)
+	const c2 = await Curso.create(curso2)
 
 	const responseCriarDuplicataNome = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
