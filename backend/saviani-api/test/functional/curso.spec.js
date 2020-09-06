@@ -12,7 +12,6 @@ informa erro RequiredField
 informa erro carga horária OutOfRange
 informa erro duplicata
 informa erro Maxlength
-informa erro 
 */
 
 const curso1 = {
@@ -85,12 +84,12 @@ test('informa erro RequiredField', async ({ client, assert }) => {
 	}).end();
 	const responseNomeVazio = await client.post('/cursos').send({
 	  	nome: '',
-	    carga_horaria: 200
+	    carga_horaria: 200,
 	    codigo: "120"
 	}).end();
 	const responseCodigoEspacosBrancos = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
-	    carga_horaria: 200
+	    carga_horaria: 200,
 	    codigo: "        "
 	}).end();
 
@@ -126,7 +125,7 @@ test('informa erro RequiredField', async ({ client, assert }) => {
 		validation: 'RequiredField'
 	})
 })
-
+/*
 test('informa erro carga horária OutOfRange', async ({ client }) => {
 	const responseValorNegativo = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
@@ -235,3 +234,4 @@ test('informa erro Maxlength', async ({ client }) => {
 	    validation: 'InvalidMaxLength'
 	}])
 })
+*/

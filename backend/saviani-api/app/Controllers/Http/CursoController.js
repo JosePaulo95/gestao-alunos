@@ -123,15 +123,44 @@ class CursoController {
     return curso;
   }
 
-  /**
-   * Update curso details.
-   * PUT or PATCH cursos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
+    /**
+  * @swagger
+  * /cursos/{id}:
+  *   patch:
+  *     tags:
+  *       - Cursos
+  *     summary: Atualiza um curso
+  *     parameters:
+  *       - name: id
+  *         description: id na url
+  *         in: path
+  *         required: true
+  *         type: integer
+  *       - name: codigo
+  *         description: Código
+  *         in: query
+  *         required: false
+  *         type: string
+  *       - name: nome
+  *         description: Nome do curso
+  *         in: query
+  *         required: false
+  *         type: string
+  *       - name: carga_horaria
+  *         description: Carga horária
+  *         in: query
+  *         required: false
+  *         type: integer
+  *     responses:
+  *       204:
+  *         description: nada é retornado
+  */
   async update ({ params, request, response }) {
+    const curso = await Curso.findOrFail(params.id);
+    const input = request.only(["codigo", "nome", "carga_horaria"])
+    await curso.merge({codigo: input.codigo, nome: input.nome, carga_horaria: input.carga_horaria})
+
+    await curso.save();
   }
 
   /**

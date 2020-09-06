@@ -22,4 +22,4 @@ Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
 
-Route.resource("cursos", "CursoController")
+Route.resource("cursos", "CursoController").apiOnly();
