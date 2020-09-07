@@ -21,6 +21,7 @@ Route.get('/api/hello', 'TestController.hello')
 Route
 	.resource("cursos", "CursoController")
 	.validator(new Map([
-	    [['cursos.store'], ['StoreCurso']]
+	    [['cursos.store'], ['StoreCurso']],
+	    [['cursos.update'], ['UpdateCurso']]
 	  ]))
 	.apiOnly();

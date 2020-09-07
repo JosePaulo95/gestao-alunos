@@ -17,12 +17,12 @@ informa erro Maxlength
 const curso1 = {
     nome: 'Curso 1',
     codigo: "1",
-    carga_horaria: 200
+    carga_horaria: 2400
 };
 const curso2 = {
     nome: 'Curso 2',
     codigo: "2",
-    carga_horaria: 200
+    carga_horaria: 2400
 };
 test('lista cursos', async ({ client }) => {
 	await Curso.create(curso1)
@@ -54,7 +54,7 @@ test('edita curso', async ({ client }) => {
 	let c = await Curso.create(curso1)
 
 	const response1 = await client.patch('/cursos/'+c.id).send({
-	    carga_horaria: 300
+	    carga_horaria: 3300
 	}).end();
 
 	const response2 = await client.get('/cursos/'+c.id).end()
@@ -62,34 +62,34 @@ test('edita curso', async ({ client }) => {
 	response2.assertJSONSubset({
 		nome: 'Curso 1',
 		codigo: "1",
-		carga_horaria: 300
+		carga_horaria: 3300
 	})
 })
 
 test('informa erro RequiredField', async ({ client, assert }) => {
 	const responseSemNome = await client.post('/cursos').send({
 	  	//nome: 'Curso 1',
-	    carga_horaria: 200,
+	    carga_horaria: 3200,
 	    codigo: "120"
 	}).end();
 	const responseSemCargaHr = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
-	    //carga_horaria: 200,
+	    //carga_horaria: 3200,
 	    codigo: "120"
 	}).end();
 	const responseSemCodigo = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
-	    carga_horaria: 200
+	    carga_horaria: 3200
 	    //codigo: "120"
 	}).end();
 	const responseNomeVazio = await client.post('/cursos').send({
 	  	nome: '',
-	    carga_horaria: 200,
+	    carga_horaria: 3200,
 	    codigo: "120"
 	}).end();
 	const responseCodigoEspacosBrancos = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
-	    carga_horaria: 200,
+	    carga_horaria: 3200,
 	    codigo: "        "
 	}).end();
 
@@ -125,44 +125,34 @@ test('informa erro RequiredField', async ({ client, assert }) => {
 		validation: 'required'
 	}])
 })
-/*
 test('informa erro carga horária OutOfRange', async ({ client }) => {
+	const curso_valido = await Curso.create(curso1)
+
 	const responseValorNegativo = await client.post('/cursos').send({
-	  	nome: 'Curso 1',
+	  	nome: 'Curso neg',
 	    carga_horaria: -200,
 	    codigo: "120"
 	}).end();
-	const responseValorZero = await client.post('/cursos').send({
-	  	nome: 'Curso 1',
-	    carga_horaria: 0,
+	const responseValorFronteira = await client.post('/cursos').send({
+	  	nome: 'Curso quase',
+	    carga_horaria: 2399,
 	    codigo: "120"
 	}).end();
-
-	const curso_valido = await Curso.create(curso1)
-	const responseEditaParaNegativo = await client.patch('/cursos/'+curso_valido.id).send({
-	    carga_horaria: -200
+	const responseEditaParaZero = await client.patch('/cursos/'+curso_valido.id).send({
+	    carga_horaria: 0
 	}).end();
 
-	responseValorNegativo.assertStatus(403);
-	responseValorZero.assertStatus(403);
-	responseEditaParaNegativo.assertStatus(403);	
+	responseValorNegativo.assertStatus(400);
+	responseValorFronteira.assertStatus(400);
+	responseEditaParaZero.assertStatus(400);	
 
-	responseValorNegativo.assertError([{
-	    message: 'Um curso não pode conter uma carga horária negativa.',
+	responseValorFronteira.assertError([{
+	    message: 'Um curso deve conter uma carga horária mínima de 2.400 horas.',
 	    field: 'carga_horaria',
-	    validation: 'OutOfRange'
-	}])
-	responseValorZero.assertError([{
-	    message: 'Um curso não pode conter 0 horas.',
-	    field: 'carga_horaria',
-	    validation: 'OutOfRange'
-	}])
-	responseEditaParaNegativo.assertError([{
-	    message: 'Um curso não pode conter uma carga horária negativa.',
-	    field: 'carga_horaria',
-	    validation: 'OutOfRange'
+	    validation: 'above'
 	}])
 })
+/*
 test('informa erro duplicata', async ({ client }) => {
 	const c1 = await Curso.create(curso1)
 	const c2 = await Curso.create(curso2)

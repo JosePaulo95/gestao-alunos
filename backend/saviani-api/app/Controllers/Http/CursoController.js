@@ -83,6 +83,16 @@ class CursoController {
   *                 "created_at": "2020-09-05 16:51:57",
   *                 "updated_at": "2020-09-05 16:51:57"
   *               }
+  *       400:
+  *         description: um array com os objetos com detalhes do erro. Pode ser algum campo não informado ou carga horária não positiva.
+  *         example:
+  *               [
+  *                 {
+  *                   "message": "Nome para o curso não informado.",
+  *                   "field": "nome",
+  *                   "validation": "required"
+  *                 }
+  *               ]
   */
   async store ({ request, response }) {
     const input = request.only(["codigo", "nome", "carga_horaria"])
@@ -153,7 +163,17 @@ class CursoController {
   *         type: integer
   *     responses:
   *       204:
-  *         description: nada é retornado
+  *         description: sucesso, mas nada é retornado
+  *       400:
+  *         description: um array com os objetos com detalhes do erro. Por exemplo, a atualização pode estar tentando setar uma carga horária baixa demais.
+  *         example:
+  *               [
+  *                 {
+  *                   "message": "Um curso deve conter uma carga horária mínima de 2.400 horas.",
+  *                   "field": "carga_horaria",
+  *                   "validation": "above"
+  *                 }
+  *               ]
   */
   async update ({ params, request, response }) {
     const curso = await Curso.findOrFail(params.id);
