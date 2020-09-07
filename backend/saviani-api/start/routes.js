@@ -18,8 +18,9 @@ const Route = use('Route')
 
 Route.get('/api/hello', 'TestController.hello')
 
-Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
-})
-
-Route.resource("cursos", "CursoController").apiOnly();
+Route
+	.resource("cursos", "CursoController")
+	.validator(new Map([
+	    [['cursos.store'], ['StoreCurso']]
+	  ]))
+	.apiOnly();

@@ -93,37 +93,37 @@ test('informa erro RequiredField', async ({ client, assert }) => {
 	    codigo: "        "
 	}).end();
 
-	responseSemNome.assertStatus(403);
-	responseSemCargaHr.assertStatus(403);
-	responseSemCodigo.assertStatus(403);
-	responseNomeVazio.assertStatus(403);
-	responseCodigoEspacosBrancos.assertStatus(403);
+	responseSemNome.assertStatus(400);
+	responseSemCargaHr.assertStatus(400);
+	responseSemCodigo.assertStatus(400);
+	responseNomeVazio.assertStatus(400);
+	responseCodigoEspacosBrancos.assertStatus(400);
 
 	responseSemNome.assertError([{
 		message: 'Nome para o curso não informado.',
 		field: 'nome',
-		validation: 'RequiredField'
+		validation: 'required'
 	}])
 	responseSemCargaHr.assertError([{
 		message: 'Carga horária do curso não informada.',
 		field: 'carga_horaria',
-		validation: 'RequiredField'
-	})	
+		validation: 'required'
+	}])	
 	responseSemCodigo.assertError([{
 		message: 'Código para o curso não informado.',
 		field: 'codigo',
-		validation: 'RequiredField'
-	})
+		validation: 'required'
+	}])
 	responseNomeVazio.assertError([{
-		message: 'Por favor, infome um nome para o curso.',
+		message: 'Nome para o curso não informado.',
 		field: 'nome',
-		validation: 'RequiredField'
-	})
+		validation: 'required'
+	}])
 	responseCodigoEspacosBrancos.assertError([{
-		message: 'Por favor, infome o código do curso.',
+		message: 'Código para o curso não informado.',
 		field: 'codigo',
-		validation: 'RequiredField'
-	})
+		validation: 'required'
+	}])
 })
 /*
 test('informa erro carga horária OutOfRange', async ({ client }) => {
@@ -163,7 +163,6 @@ test('informa erro carga horária OutOfRange', async ({ client }) => {
 	    validation: 'OutOfRange'
 	}])
 })
-
 test('informa erro duplicata', async ({ client }) => {
 	const c1 = await Curso.create(curso1)
 	const c2 = await Curso.create(curso2)
