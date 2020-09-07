@@ -73,12 +73,12 @@ test('informa erro RequiredField', async ({ client, assert }) => {
 	    codigo: "120"
 	}).end();
 	const responseSemCargaHr = await client.post('/cursos').send({
-	  	nome: 'Curso 1',
+	  	nome: 'Curso 4',
 	    //carga_horaria: 3200,
 	    codigo: "120"
 	}).end();
 	const responseSemCodigo = await client.post('/cursos').send({
-	  	nome: 'Curso 1',
+	  	nome: 'Curso 5',
 	    carga_horaria: 3200
 	    //codigo: "120"
 	}).end();
@@ -88,7 +88,7 @@ test('informa erro RequiredField', async ({ client, assert }) => {
 	    codigo: "120"
 	}).end();
 	const responseCodigoEspacosBrancos = await client.post('/cursos').send({
-	  	nome: 'Curso 1',
+	  	nome: 'Curso 6',
 	    carga_horaria: 3200,
 	    codigo: "        "
 	}).end();
@@ -152,7 +152,6 @@ test('informa erro carga horária OutOfRange', async ({ client }) => {
 	    validation: 'above'
 	}])
 })
-/*
 test('informa erro duplicata', async ({ client }) => {
 	const c1 = await Curso.create(curso1)
 	const c2 = await Curso.create(curso2)
@@ -160,67 +159,66 @@ test('informa erro duplicata', async ({ client }) => {
 	const responseCriarDuplicataNome = await client.post('/cursos').send({
 	  	nome: 'Curso 1',
 	  	codigo: "3",
-	  	carga_horaria: 200
+	  	carga_horaria: 3200
 	}).end();
 	const responseCriarDuplicataCodigo = await client.post('/cursos').send({
-	  	nome: 'Curso 3',
+	  	nome: 'Curso 99',
 	  	codigo: "1",
-	  	carga_horaria: 200
+	  	carga_horaria: 3200
 	}).end();
 	const responseEditaNomeDuplicando = await client.patch('/cursos/'+c1.id).send({
 	  	nome: 'Curso 2'
 	}).end();
 
-	responseCriarDuplicataNome.assertStatus(409);
-	responseCriarDuplicataCodigo.assertStatus(409);
-	responseEditaNomeDuplicando.assertStatus(409);
+	responseCriarDuplicataNome.assertStatus(400);
+	responseCriarDuplicataCodigo.assertStatus(400);
+	responseEditaNomeDuplicando.assertStatus(400);
 
 	responseCriarDuplicataNome.assertError([{
 	    message: 'Já existe um curso com este nome.',
 	    field: 'nome',
-	    validation: 'AlreadyExists'
+	    validation: 'unique'
 	}])
 	responseCriarDuplicataCodigo.assertError([{
-	    message: 'O nome informado é longo demais.',
+	    message: 'Já existe um curso com este código.',
 	    field: 'codigo',
-	    validation: 'AlreadyExists'
+	    validation: 'unique'
 	}])
 	responseEditaNomeDuplicando.assertError([{
 	    message: 'Já existe um curso com este nome.',
 	    field: 'nome',
-	    validation: 'AlreadyExists'
+	    validation: 'unique'
 	}])
 })
 test('informa erro Maxlength', async ({ client }) => {
-	const responseNomeCodTamMax = await client.post('/cursos').send({
-	  	nome: 'a'.repeat(240),
-	  	codigo: "1".repeat(30),
-	  	carga_horaria: 200
+	const responseNomeCodTamMaxFronteira = await client.post('/cursos').send({
+	  	nome: 'b'.repeat(240),
+	  	codigo: "2".repeat(30),
+	  	carga_horaria: 3000
 	}).end();
 	const responseNomeMtLongo = await client.post('/cursos').send({
-	  	nome: 'a'.repeat(241),
-	  	codigo: "1",
-	  	carga_horaria: 200
+	  	nome: 'c'.repeat(241),
+	  	codigo: "34",
+	  	carga_horaria: 3000
 	}).end();
 	const responseCodMtLongo = await client.post('/cursos').send({
 	  	nome: 'a',
-	  	codigo: "1".repeat(31),
-	  	carga_horaria: 200
+	  	codigo: "3".repeat(31),
+	  	carga_horaria: 3000
 	}).end();
 
-	responseNomeCodTamMax.assertStatus(200);
-	responseNomeMtLongo.assertStatus(403);
-	responseCodMtLongo.assertStatus(403);
+	responseNomeCodTamMaxFronteira.assertStatus(200);
+	responseNomeMtLongo.assertStatus(400);
+	responseCodMtLongo.assertStatus(400);
 
 	responseNomeMtLongo.assertError([{
-	    message: 'O nome informado é longo demais.',
+	    message: 'O nome informado é longo demais (max: 240 caracteres).',
 	    field: 'nome',
-	    validation: 'InvalidMaxLength'
+	    validation: 'max'
 	}])
 	responseCodMtLongo.assertError([{
-	    message: 'O código informado é longo demais.',
+	    message: 'O código informado é longo demais (max: 30 caracteres).',
 	    field: 'codigo',
-	    validation: 'InvalidMaxLength'
+	    validation: 'max'
 	}])
 })
-*/
