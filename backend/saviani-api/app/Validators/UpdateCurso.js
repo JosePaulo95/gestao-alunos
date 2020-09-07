@@ -18,7 +18,11 @@ class UpdateCurso {
     }
   }
   async fails(errorMessages) {
-    return this.ctx.response.status(400).json(
+    // TODO achar o jeito certo de devolver o status
+	const uniqueError = (erro) => erro.validation == "unique";
+	const code = errorMessages.some(uniqueError)?409:403;
+
+    return this.ctx.response.status(code).json(
       errorMessages
     );
   }

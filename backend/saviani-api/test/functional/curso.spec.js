@@ -93,11 +93,11 @@ test('informa erro RequiredField', async ({ client, assert }) => {
 	    codigo: "        "
 	}).end();
 
-	responseSemNome.assertStatus(400);
-	responseSemCargaHr.assertStatus(400);
-	responseSemCodigo.assertStatus(400);
-	responseNomeVazio.assertStatus(400);
-	responseCodigoEspacosBrancos.assertStatus(400);
+	responseSemNome.assertStatus(403);
+	responseSemCargaHr.assertStatus(403);
+	responseSemCodigo.assertStatus(403);
+	responseNomeVazio.assertStatus(403);
+	responseCodigoEspacosBrancos.assertStatus(403);
 
 	responseSemNome.assertError([{
 		message: 'Nome para o curso não informado.',
@@ -142,9 +142,9 @@ test('informa erro carga horária OutOfRange', async ({ client }) => {
 	    carga_horaria: 0
 	}).end();
 
-	responseValorNegativo.assertStatus(400);
-	responseValorFronteira.assertStatus(400);
-	responseEditaParaZero.assertStatus(400);	
+	responseValorNegativo.assertStatus(403);
+	responseValorFronteira.assertStatus(403);
+	responseEditaParaZero.assertStatus(403);	
 
 	responseValorFronteira.assertError([{
 	    message: 'Um curso deve conter uma carga horária mínima de 2.400 horas.',
@@ -170,9 +170,9 @@ test('informa erro duplicata', async ({ client }) => {
 	  	nome: 'Curso 2'
 	}).end();
 
-	responseCriarDuplicataNome.assertStatus(400);
-	responseCriarDuplicataCodigo.assertStatus(400);
-	responseEditaNomeDuplicando.assertStatus(400);
+	responseCriarDuplicataNome.assertStatus(409);
+	responseCriarDuplicataCodigo.assertStatus(409);
+	responseEditaNomeDuplicando.assertStatus(409);
 
 	responseCriarDuplicataNome.assertError([{
 	    message: 'Já existe um curso com este nome.',
@@ -208,8 +208,8 @@ test('informa erro Maxlength', async ({ client }) => {
 	}).end();
 
 	responseNomeCodTamMaxFronteira.assertStatus(200);
-	responseNomeMtLongo.assertStatus(400);
-	responseCodMtLongo.assertStatus(400);
+	responseNomeMtLongo.assertStatus(403);
+	responseCodMtLongo.assertStatus(403);
 
 	responseNomeMtLongo.assertError([{
 	    message: 'O nome informado é longo demais (max: 240 caracteres).',

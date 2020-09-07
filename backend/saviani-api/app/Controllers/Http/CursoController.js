@@ -83,7 +83,7 @@ class CursoController {
   *                 "created_at": "2020-09-05 16:51:57",
   *                 "updated_at": "2020-09-05 16:51:57"
   *               }
-  *       400:
+  *       403:
   *         description: um array com os objetos com detalhes do erro. Pode ser algum campo não informado ou carga horária não positiva.
   *         example:
   *               [
@@ -91,6 +91,16 @@ class CursoController {
   *                   "message": "Nome para o curso não informado.",
   *                   "field": "nome",
   *                   "validation": "required"
+  *                 }
+  *               ]
+  *       409:
+  *         description: uma mensagem de erro que indica duplicata
+  *         example:
+  *               [
+  *                 {
+  *                   "message": "Já existe um curso com este nome.",
+  *                   "field": "nome",
+  *                   "validation": "unique"
   *                 }
   *               ]
   */
@@ -164,7 +174,7 @@ class CursoController {
   *     responses:
   *       204:
   *         description: sucesso, mas nada é retornado
-  *       400:
+  *       403:
   *         description: um array com os objetos com detalhes do erro. Por exemplo, a atualização pode estar tentando setar uma carga horária baixa demais.
   *         example:
   *               [
@@ -172,6 +182,16 @@ class CursoController {
   *                   "message": "Um curso deve conter uma carga horária mínima de 2.400 horas.",
   *                   "field": "carga_horaria",
   *                   "validation": "above"
+  *                 }
+  *               ]
+  *       409:
+  *         description: uma mensagem de erro que indica duplicata
+  *         example:
+  *               [
+  *                 {
+  *                   "message": "Já existe um curso com este nome.",
+  *                   "field": "nome",
+  *                   "validation": "unique"
   *                 }
   *               ]
   */
