@@ -7,9 +7,8 @@ trait('Test/ApiClient')
 
 /*
 lista alunos com os campos endereco e curso
+seleciona um aluno com endereço
 cria aluno com endereço
-
-seleciona um aluno
 apaga aluno
 edita aluno ou seu endereço
 consegue cadastrar alunos com o mesmo nome, cep ou telefone
@@ -67,44 +66,61 @@ test('lista alunos com os campos endereco e curso', async ({ client }) => {
 	response.assertStatus(200)
 	response.assertJSONSubset([dadosAluno1comEndereco, dadosAluno2comEndereco])
 })
-test('cria aluno com endereço', async ({ client }) => {
-	const response = await client.post('/alunos').send({...dadosAluno1, ...dados_endereco}).end();
-	response.assertStatus(200)
-	response.assertJSONSubset({...dadosAluno1})	
-})
-/*
-test('apaga curso', async ({ client }) => {
-	await Aluno.create(aluno1)
-	let c = await Aluno.create(curso2)
+test('seleciona aluno com endereço', async ({ client, assert }) => {
+	const endereco = await Endereco.create(dados_endereco)
+	const aluno = await Aluno.create({endereco_id: endereco.id, ...dadosAluno1})
 
-	const response1 = await client.delete('/alunos/'+c.id).end()	
-	response1.assertStatus(200)
+	const response = await client.get('/alunos/'+aluno.id).end()
 
-	const response2 = await client.get('/alunos/'+c.id).end()
-	response2.assertStatus(404)
-
-	//não apaga o outro curso
-	const response3 = await client.get('/alunos').end()
-	response3.assertStatus(200)
-	response3.assertJSONSubset([aluno1])
-})
-
-test('edita curso', async ({ client }) => {
-	let c = await Aluno.create(aluno1)
-
-	const response1 = await client.patch('/alunos/'+c.id).send({
-	    carga_horaria: 3300
-	}).end();
-
-	const response2 = await client.get('/alunos/'+c.id).end()
-	response2.assertStatus(200)
-	response2.assertJSONSubset({
-		nome: 'Curso 1',
-		codigo: "1",
-		carga_horaria: 3300
+	//response.assertStatus(200)
+	response.assertJSONSubset({
+		...dadosAluno1,
+		endereco: {...dados_endereco}
 	})
 })
+test('cria aluno com endereço', async ({ client, assert }) => {
+	const response = await client.post('/alunos').send({...dadosAluno1, ...dados_endereco}).end();
+	response.assertStatus(200)
+	response.assertJSONSubset({...dadosAluno1})
 
+	//preciso recuperar o endereço retornado e checar se é está correto, TODO deve haver um jeito de consultar direto pelo objeto response mas não encontrei como
+	const aluno_criado = await Aluno.findBy("cpf", dadosAluno1.cpf)
+	const endereco_criado = await Endereco.find(aluno_criado.endereco_id)
+	assert.deepEqual(dados_endereco.cep, endereco_criado.cep)
+})
+test('apaga aluno', async ({ client, assert }) => {
+	const endereco = await Endereco.create(dados_endereco)
+	const aluno = await Aluno.create({endereco_id: endereco.id, ...dadosAluno1})
+
+	const response_delete = await client.delete('/alunos/'+aluno.id).end()	
+	response_delete.assertStatus(204)
+
+	const response_encontrar_deletado = await client.get('/alunos/'+aluno.id).end()
+	response_encontrar_deletado.assertJSONSubset({a: "ok"})
+
+	//TODO dando erro ao usar Endereco.find pra verificar exclusão em cascata, pendente
+})
+test('edita aluno', async ({ client }) => {
+	const endereco = await Endereco.create(dados_endereco)
+	const aluno = await Aluno.create({endereco_id: endereco.id, ...dadosAluno1})
+
+	const response_update = await client.patch('/alunos/'+aluno.id).send({
+	    telefone: "2222222222",
+	    bairro: "novo bairro"
+	}).end();
+	response_update.assertStatus(200)
+
+	const response_check = await client.get('/alunos/'+aluno.id).end()
+	response_check.assertStatus(200)
+	response_check.assertJSONSubset({
+		id: aluno.id,
+		telefone: "2222222222",
+		endereco: {
+			bairro: "novo bairro"
+		}
+	})
+})
+/*
 test('informa erro RequiredField', async ({ client, assert }) => {
 	const responseSemNome = await client.post('/alunos').send({
 	  	//nome: 'Curso 1',

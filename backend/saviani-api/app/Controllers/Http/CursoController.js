@@ -217,17 +217,16 @@ class CursoController {
   *         required: true
   *         type: string
   *     responses:
-  *       200:
-  *         description: Curso selecionado
-  *         example: {}
+  *       204:
+  *         description: Nada é retornado
+  *         example: 
   *
   */
   async destroy ({ params, request, response }) {
     const curso = await Curso.findOrFail(params.id)
-
     curso.delete();
 
-    return {};
+    
   }
 }
 

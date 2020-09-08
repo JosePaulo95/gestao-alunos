@@ -35,19 +35,19 @@ test('lista cursos', async ({ client }) => {
 })
 
 test('apaga curso', async ({ client }) => {
-	await Curso.create(curso1)
-	let c = await Curso.create(curso2)
+	let c1 = await Curso.create(curso1)
+	let c2 = await Curso.create(curso2)
 
-	const response1 = await client.delete('/cursos/'+c.id).end()	
-	response1.assertStatus(200)
+	const response1 = await client.delete('/cursos/'+c1.id).end()	
+	response1.assertStatus(204)
 
-	const response2 = await client.get('/cursos/'+c.id).end()
+	const response2 = await client.get('/cursos/'+c1.id).end()
 	response2.assertStatus(404)
 
 	//não apaga o outro curso
 	const response3 = await client.get('/cursos').end()
 	response3.assertStatus(200)
-	response3.assertJSONSubset([curso1])
+	response3.assertJSONSubset([curso2])
 })
 
 test('edita curso', async ({ client }) => {
