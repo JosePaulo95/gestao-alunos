@@ -16,12 +16,14 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.get('/api/hello', 'TestController.hello')
-
 Route
 	.resource("cursos", "CursoController")
 	.validator(new Map([
 	    [['cursos.store'], ['StoreCurso']],
 	    [['cursos.update'], ['UpdateCurso']]
 	  ]))
+	.apiOnly();
+
+Route
+	.resource("alunos", "AlunoController")
 	.apiOnly();
