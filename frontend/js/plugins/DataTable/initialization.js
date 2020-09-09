@@ -6,6 +6,8 @@ $(document).ready(function() {
         ]
     } );
     $("#DataTables_Table_0_filter").hide();
+    $("#DataTables_Table_0_info").hide();
+    $("#DataTables_Table_0_paginate").hide();
 
     let bt_excel = $(".dt-button.buttons-excel.buttons-html5");
 
