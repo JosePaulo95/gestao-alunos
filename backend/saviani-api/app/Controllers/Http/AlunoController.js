@@ -17,27 +17,45 @@ class AlunoController {
   *             [
   *               {
   *                 "id": 1,
-  *                 "codigo": "med001",
-  *                 "nome": "Medicina",
-  *                 "carga_horaria": 600,
-  *                 "created_at": "2020-09-05 16:51:57",
-  *                 "updated_at": "2020-09-05 16:51:57"
+  *                 "codigo": "codigoAluno 1",
+  *                 "nome": "José Paulo",
+  *                 "cpf": "00868110380",
+  *                 "email": "meu_email@gmail.com",
+  *                 "telefone": "98988231995",
+  *                 "endereco_id": 1,
+  *                 "created_at": "2020-09-09 12:38:16",
+  *                 "updated_at": "2020-09-09 12:38:16",
+  *                 "endereco": {
+  *                   "id": 1,
+  *                   "cep": "65051190",
+  *                   "numero": "19",
+  *                   "logradouro": "logradouro",
+  *                   "bairro": "bairro",
+  *                   "cidade": "cidade",
+  *                   "created_at": "2020-09-09 12:38:16",
+  *                   "updated_at": "2020-09-09 12:38:16"
+  *                 }
   *               },
   *               {
   *                 "id": 2,
-  *                 "codigo": "farm001",
-  *                 "nome": "Farmácia",
-  *                 "carga_horaria": 1200,
-  *                 "created_at": "2020-09-05 16:52:08",
-  *                 "updated_at": "2020-09-05 16:52:08"
-  *               },
-  *               {
-  *                 "id": 3,
-  *                 "codigo": "comp001",
-  *                 "nome": "Computação",
-  *                 "carga_horaria": 1200,
-  *                 "created_at": "2020-09-05 16:52:08",
-  *                 "updated_at": "2020-09-05 16:52:08"
+  *                 "codigo": "codigoAluno 2",
+  *                 "nome": "Andre Pereira Silva",
+  *                 "cpf": "00868110381",
+  *                 "email": "meu_email2@gmail.com",
+  *                 "telefone": "98988231995",
+  *                 "endereco_id": 1,
+  *                 "created_at": "2020-09-09 12:38:16",
+  *                 "updated_at": "2020-09-09 12:38:16",
+  *                 "endereco": {
+  *                   "id": 1,
+  *                   "cep": "65051190",
+  *                   "numero": "19",
+  *                   "logradouro": "logradouro",
+  *                   "bairro": "bairro",
+  *                   "cidade": "cidade",
+  *                   "created_at": "2020-09-09 12:38:16",
+  *                   "updated_at": "2020-09-09 12:38:16"
+  *                 }
   *               }
   *             ]
   */
@@ -55,57 +73,75 @@ class AlunoController {
   *       - Alunos
   *     summary: Cadastra um aluno
   *     parameters:
-  *       - name: codigo
+  *         -name: codigo
   *         description: Código
   *         in: query
   *         required: true
   *         type: string
-  *       - name: nome
-  *         description: Nome do Aluno
+  *         -name: nome
+  *         description: Nome
   *         in: query
   *         required: true
   *         type: string
-  *       - name: carga_horaria
-  *         description: Carga horária
+  *         -name: cpf
+  *         description: 11 dígitos do CPF
   *         in: query
   *         required: true
-  *         type: integer
+  *         type: string
+  *         -name: email
+  *         description: um email válido
+  *         in: query
+  *         required: true
+  *         type: string
+  *         -name: telefone
+  *         description: DDD+dígitos do telefone
+  *         in: query
+  *         required: true
+  *         type: string
+  *         -name: cep
+  *         description: dígitos do cep
+  *         in: query
+  *         required: true
+  *         type: string
+  *         -name: numero
+  *         description: campo referente a endereço, número da casa, apto
+  *         in: query
+  *         required: true
+  *         type: string
+  *         -name: logradouro
+  *         description: nome da rua, Av
+  *         in: query
+  *         required: true
+  *         type: string
+  *         -name: bairro
+  *         description: Bairro
+  *         in: query
+  *         required: true
+  *         type: string
+  *         -name: cidade
+  *         description: nome da cidade
+  *         in: query
+  *         required: true
+  *         type: string
   *     responses:
   *       200:
   *         description: Aluno cadastrado
   *         example:
   *               {
-  *                 "id": 1,
-  *                 "codigo": "med001",
-  *                 "nome": "Medicina",
-  *                 "carga_horaria": 600,
-  *                 "created_at": "2020-09-05 16:51:57",
-  *                 "updated_at": "2020-09-05 16:51:57"
+  *                 "id": 2,
+  *                 "codigo": "codigoAluno 2",
+  *                 "nome": "Andre Pereira Silva",
+  *                 "cpf": "00868110381",
+  *                 "email": "meu_email2@gmail.com",
+  *                 "telefone": "98988231995",
+  *                 "endereco_id": 1,
+  *                 "created_at": "2020-09-09 12:38:16",
+  *                 "updated_at": "2020-09-09 12:38:16"
   *               }
-  *       403:
-  *         description: um array com os objetos com detalhes do erro. Pode ser algum campo não informado ou carga horária não positiva.
-  *         example:
-  *               [
-  *                 {
-  *                   "message": "Nome para o Aluno não informado.",
-  *                   "field": "nome",
-  *                   "validation": "required"
-  *                 }
-  *               ]
-  *       409:
-  *         description: uma mensagem de erro que indica duplicata
-  *         example:
-  *               [
-  *                 {
-  *                   "message": "Já existe um Aluno com este nome.",
-  *                   "field": "nome",
-  *                   "validation": "unique"
-  *                 }
-  *               ]
   */
   async store ({ request, response }) {
-    const input_aluno_fields = request.only(["codigo","nome","cpf","email","telefone"])
-    const input_endereco_fields = request.only(["cep","numero","logradouro","bairro","cidade"])
+    const input_aluno_fields = request.only(["codigo","nome","cpf","email","telefone",])
+    const input_endereco_fields = request.only(["cep","numero","logradouro","bairro","cidade",])
 
     const novo_endereco = await Endereco.create({...input_endereco_fields});
     const novo_aluno = await Aluno.create({"endereco_id": novo_endereco.id, ...input_aluno_fields});
@@ -131,12 +167,25 @@ class AlunoController {
   *         description: aluno selecionado
   *         example:
   *               {
-  *                 "id": 1,
-  *                 "codigo": "med001",
-  *                 "nome": "Medicina",
-  *                 "carga_horaria": 600,
-  *                 "created_at": "2020-09-05 16:51:57",
-  *                 "updated_at": "2020-09-05 16:51:57"
+  *                 "id": 2,
+  *                 "codigo": "codigoAluno 2",
+  *                 "nome": "Andre Pereira Silva",
+  *                 "cpf": "00868110381",
+  *                 "email": "meu_email2@gmail.com",
+  *                 "telefone": "98988231995",
+  *                 "endereco_id": 1,
+  *                 "created_at": "2020-09-09 12:38:16",
+  *                 "updated_at": "2020-09-09 12:38:16",
+  *                 "endereco": {
+  *                   "id": 1,
+  *                   "cep": "65051190",
+  *                   "numero": "19",
+  *                   "logradouro": "logradouro",
+  *                   "bairro": "bairro",
+  *                   "cidade": "cidade",
+  *                   "created_at": "2020-09-09 12:38:16",
+  *                   "updated_at": "2020-09-09 12:38:16"
+  *                 }
   *               }
   */
   async show ({ params, response }) {
@@ -176,26 +225,6 @@ class AlunoController {
   *     responses:
   *       204:
   *         description: sucesso, mas nada é retornado
-  *       403:
-  *         description: um array com os objetos com detalhes do erro. Por exemplo, a atualização pode estar tentando setar uma carga horária baixa demais.
-  *         example:
-  *               [
-  *                 {
-  *                   "message": "Um curso deve conter uma carga horária mínima de 2.400 horas.",
-  *                   "field": "carga_horaria",
-  *                   "validation": "above"
-  *                 }
-  *               ]
-  *       409:
-  *         description: uma mensagem de erro que indica duplicata
-  *         example:
-  *               [
-  *                 {
-  *                   "message": "Já existe um curso com este nome.",
-  *                   "field": "nome",
-  *                   "validation": "unique"
-  *                 }
-  *               ]
   */
   async update ({ params, request, response }) {
     const aluno = await Aluno.findOrFail(params.id);

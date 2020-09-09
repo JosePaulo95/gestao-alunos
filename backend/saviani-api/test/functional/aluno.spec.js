@@ -96,7 +96,7 @@ test('apaga aluno', async ({ client, assert }) => {
 	response_delete.assertStatus(204)
 
 	const response_encontrar_deletado = await client.get('/alunos/'+aluno.id).end()
-	response_encontrar_deletado.assertJSONSubset({a: "ok"})
+	response_encontrar_deletado.assertStatus(404)
 
 	//TODO dando erro ao usar Endereco.find pra verificar exclusão em cascata, pendente
 })
