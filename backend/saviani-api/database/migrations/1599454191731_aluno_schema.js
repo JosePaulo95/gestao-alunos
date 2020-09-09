@@ -19,6 +19,11 @@ class AlunoSchema extends Schema {
 			.references("id")
 			.inTable("enderecos")
 			.onDelete("CASCADE");
+		table
+			.integer("curso_id")
+			.unsigned()
+			.references("id")
+			.inTable("cursos")
 		table.timestamps();
     })
   }
