@@ -145,8 +145,7 @@ var App = new Vue({
         return [];
       }
     },
-    excluir(entidade, id){
-      console.log('https://5f52be047c47c30016e30a17.mockapi.io/'+entidade+"/"+id)
+    excluir(entidade, id, index){
       this.$buefy.dialog.confirm({
           title: 'Deletando curso',
           message: 'Você tem certeza que deseja <b>remover</b> este curso?',
@@ -156,7 +155,9 @@ var App = new Vue({
           onConfirm: () => {
              axios
              .delete('https://5f52be047c47c30016e30a17.mockapi.io/'+entidade+"/"+id)
-             .then(this.$buefy.toast.open('Curso apagado'));
+             .then(
+                this.$buefy.toast.open('Curso apagado')
+              );
           }
       })
       //this.abas[aba_id].dados.splice[index, 1];
